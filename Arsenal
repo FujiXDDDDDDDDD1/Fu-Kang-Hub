@@ -345,6 +345,44 @@ local Toggle1 = Section1:CreateToggle("Aimbot", Settings.Aimbot.Enabled, functio
     Settings.Aimbot.Enabled = State
 end)
 
+local Toggle1 = Section1:CreateToggle("SilentAim", Settings.SilentAim, function(State)
+    Settings.SilentAim = State
+    local Players = Players
+    local LocalPlayer = Player
+    local Mouse = LocalPlayer:GetMouse()
+    function ClosestPlayerToCurser()
+        local MaxDistance, Closest = math.huge
+        for i,v in pairs(Players.GetPlayers(Players)) do
+            if v ~= LocalPlayer and v.Team ~= LocalPlayer.Team and v.Character then
+                local H = v.Character.FindFirstChild(v.Character, "Head")
+                if H then 
+                    local Pos, Vis = Workspace.CurrentCamera.WorldToScreenPoint(Workspace.CurrentCamera, H.Position)
+                    if Vis then
+                        local A1, A2 = Vector2.new(Mouse.X, Mouse.Y), Vector2.new(Pos.X, Pos.Y)
+                        local Dist = (A2 - A1).Magnitude
+                        if Dist < MaxDistance and Dist <= 2500 then
+                            MaxDistance = Dist
+                            Closest = v
+                        end
+                    end
+                end
+            end
+        end
+        return Closest
+    end
+    local OldNameCall = nil
+    OldNameCall = hookmetamethod(game, "__namecall", function(self,...)
+        local Args = {...}
+        if getnamecallmethod() == "FindPartOnRayWithIgnoreList" and not checkcaller() and Settings.SilentAim then
+            local GivemeHead = ClosestPlayerToCurser()
+            if GivemeHead and GivemeHead.Character and GivemeHead.Character.FindFirstChild(GivemeHead.Character, Settings.AimPart) then
+                Args[1] = Ray.new(Workspace.CurrentCamera.CFrame.Position, (GivemeHead.Character[Settings.AimPart].Position - Workspace.CurrentCamera.CFrame.Position).Unit * 1000)
+                return OldNameCall(self, unpack(Args))
+            end
+        end
+        return OldNameCall(self, ...)
+    end)
+    end)
 
 local Dropdown1 = Section1:CreateDropdown("HitPart", {"HumanoidRootPart","Head","UpperTorso","LowerTorso","Random"}, function(String)
 	Settings.AimPart = String
@@ -366,6 +404,8 @@ local Toggle1 = Section1:CreateToggle("WallCheck", nil, function(State)
     Settings.Aimbot.WallCheck = State
 end)
 
+
+
 local Slider2 = Section1:CreateSlider("Aimbot Radius", 0,1000,Settings.Aimbot.FOV,false, function(Value)
     Settings.Aimbot.FOV = Value
     Circle.Radius = Settings.Aimbot.FOV 
@@ -379,47 +419,6 @@ local Colorpicker3 = Section1:CreateColorpicker("Circle Color", function(Color)
     Circle.Color = Color
     Circle.Color = Settings.Color
 end)
-
-
-local Toggle1 = Section1:CreateToggle("SilentAim", Settings.SilentAim, function(State)
-Settings.SilentAim = State
-local Players = Players
-local LocalPlayer = Player
-local Mouse = LocalPlayer:GetMouse()
-function ClosestPlayerToCurser()
-    local MaxDistance, Closest = math.huge
-    for i,v in pairs(Players.GetPlayers(Players)) do
-        if v ~= LocalPlayer and v.Team ~= LocalPlayer.Team and v.Character then
-            local H = v.Character.FindFirstChild(v.Character, "Head")
-            if H then 
-                local Pos, Vis = Workspace.CurrentCamera.WorldToScreenPoint(Workspace.CurrentCamera, H.Position)
-                if Vis then
-                    local A1, A2 = Vector2.new(Mouse.X, Mouse.Y), Vector2.new(Pos.X, Pos.Y)
-                    local Dist = (A2 - A1).Magnitude
-                    if Dist < MaxDistance and Dist <= 2500 then
-                        MaxDistance = Dist
-                        Closest = v
-                    end
-                end
-            end
-        end
-    end
-    return Closest
-end
-local OldNameCall = nil
-OldNameCall = hookmetamethod(game, "__namecall", function(self,...)
-    local Args = {...}
-    if getnamecallmethod() == "FindPartOnRayWithIgnoreList" and not checkcaller() and Settings.SilentAim then
-        local GivemeHead = ClosestPlayerToCurser()
-        if GivemeHead and GivemeHead.Character and GivemeHead.Character.FindFirstChild(GivemeHead.Character, Settings.AimPart) then
-            Args[1] = Ray.new(Workspace.CurrentCamera.CFrame.Position, (GivemeHead.Character[Settings.AimPart].Position - Workspace.CurrentCamera.CFrame.Position).Unit * 1000)
-            return OldNameCall(self, unpack(Args))
-        end
-    end
-    return OldNameCall(self, ...)
-end)
-end)
-
 
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/Karrot-Esp"))()
 
