@@ -2160,6 +2160,7 @@ game.StarterGui:SetCore("SendNotification", {
 })
  
 local ALTab = Window:AddTab("Silent Aim")
+local FARM = Window:AddTab("Auto Farm ")
 local ESPTab = Window:AddTab("Esp")
 local RCTab = Window:AddTab("Misc")
 local TpsTab = Window:AddTab("Teleport")
@@ -2245,6 +2246,66 @@ end)
 
 folder2:AddButton("Safe Zone", function(bool)
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-66.7253647, -58.7000694, 163.234497, 0.994780004, 6.93854005e-08, 0.102042682, -7.7234894e-08, 1, 7.29727034e-08, -0.102042682, -8.04730433e-08, 0.994780004)
+end)
+
+FARM:AddSwitch("Auto Farm Cash (Beta)", function(bool)
+    _G.AutoFarm = true
+
+-- // Variables
+local Jogador = game:GetService("Players").LocalPlayer
+local Drop = game:GetService("Workspace").Ignored.Drop
+local Cashiers = game:GetService("Workspace").Cashiers
+local opens = Cashiers:GetDescendants()
+local num_opens = #opens
+
+-- // Functions
+function Farmando()
+   while _G.AutoFarm do
+       for _,f in pairs(Jogador:FindFirstChildOfClass("Backpack"):GetChildren()) do
+           if f:IsA("Tool") or f:IsA("HopperBin") then
+               if f.Name == "Combat" then
+                   f.Parent = Jogador.Character
+               end
+           end
+       end
+       wait()
+   end
+end
+
+function FarmandoLoop()
+   while _G.AutoFarm do
+       for _,obj in pairs(Drop:GetDescendants()) do
+           if obj:IsA("ClickDetector") then
+               local pos1 = obj.Parent.Position
+               local pos2 = Jogador.Character.HumanoidRootPart.Position
+               local distance = (pos1 - pos2).Magnitude
+               if distance <= 20 then
+                   fireclickdetector(obj)
+               end
+           end
+       end
+       mouse1click()
+       wait()
+   end
+end
+
+function OpensLoop()
+   while _G.AutoFarm do
+       for i = 1, num_opens do
+           if opens[i].Name == "Open" then
+               Jogador.Character.HumanoidRootPart.CFrame = opens[i].CFrame
+               wait(12)
+           end
+       end
+   i = 1
+   wait(10)
+   end
+end
+
+-- // Main
+coroutine.wrap(Farmando)()
+coroutine.wrap(FarmandoLoop)()
+coroutine.wrap(OpensLoop)()
 end)
 
 CreditTAB:AddButton("Made by x2Sleep#9999", function(bool)
