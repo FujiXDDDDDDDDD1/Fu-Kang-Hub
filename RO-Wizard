@@ -65,7 +65,7 @@ game:GetService("UserInputService").JumpRequest:connect(function()
 end) end)
 
 
-local Toggle1 = Section2:CreateToggle("G PlatFormNoclip", Settings.NoClip1, function(State)
+local Toggle1 = Section2:CreateToggle("G Noclip", Settings.NoClip1, function(State)
 Settings.NoClip1 = State
 noclip = false
 game:GetService("RunService").Stepped:connect(
@@ -86,34 +86,6 @@ game.Players.LocalPlayer:GetMouse().KeyDown:connect(
     end
 )
 end)
-local Toggle1 = Section2:CreateToggle("N NonePlatFormNoclip", Settings.NoClip2, function(State)
-Settings.NoClip2= State
-game.Players.LocalPlayer:GetMouse().KeyDown:connect(
-    function(v)
-        if v == "n" then
-            NoClip = not NoClip
-            game:GetService("RunService").Stepped:connect(
-                function()
-                    if NoClip then
-                     if Settings.NoClip2 then
-                        for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-                            pcall(
-                                function()
-                                    if v.ClassName == "Part" or v.ClassName == "MeshPart" then
-                                        v.CanCollide = false
-                                    end
-                                end
-                            )
-                        end
-                    end
-                end
-            end
-            )
-        end
-    end
-)
-end)
-
 
 local Toggle1 = Section2:CreateToggle("B Fly", Settings.Fly1, function(State)
 Settings.Fly1 = State
