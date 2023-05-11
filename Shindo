@@ -1,7 +1,7 @@
 local Config = {
     WindowName = "Fu Kang Hub",
 	Color = Color3.fromRGB(171,0,255),
-	Keybind = Enum.KeyCode.RightControl
+	Keybind = Enum.KeyCode.Insert
 }
 repeat task.wait() until game:IsLoaded() 
 
