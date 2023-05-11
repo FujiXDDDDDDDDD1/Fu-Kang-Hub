@@ -5,7 +5,7 @@ end
 local Config = {
     WindowName = "Fu Kang Hub | Ro Wizard",
 	Color = Color3.fromRGB(0,213,255),
-	Keybind = Enum.KeyCode.RightControl
+	Keybind = Enum.KeyCode.Insert
 }
 game:GetService("Players").LocalPlayer.Idled:connect(function()
 game:GetService("VirtualUser"):ClickButton2(Vector2.new())
