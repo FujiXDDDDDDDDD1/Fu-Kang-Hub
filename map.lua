@@ -1,3 +1,4 @@
+local PlaceId = game.PlaceId
 if PlaceId == 3351674303 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/FujiXDDDDDDDDD1/Fu-Kang-Hub/main/Driving%20Empire"))()
     
